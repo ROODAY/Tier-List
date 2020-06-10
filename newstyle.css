@@ -247,3 +247,39 @@ button:active {
 @media handheld {
 	body{width: 800px;}
 }
+
+.character::after {
+  background-color: #333;
+  border-radius: 10px;
+  color: white;
+  content: attr(playername);
+  display: none;
+  padding: 10px 15px;
+  position: absolute;
+  text-align: center;
+  z-index: 999;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, calc(-100% - 10px));
+}
+
+.character::before {
+  background-color: #333;
+  content: ' ';
+  display: none;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  z-index: 999;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, calc(-100% - 5px)) rotate(45deg);
+}
+
+.character:hover::before {
+	display: block;
+}
+
+.character:hover::after {
+  display: block;
+}
