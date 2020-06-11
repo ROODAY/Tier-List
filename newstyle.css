@@ -86,6 +86,8 @@ table {
 	width: 960px;
 	min-height: 64px;
 	text-align: left;
+  display: flex;
+  flex-direction: row;
 }
 
 .hiddenkid {
@@ -138,6 +140,8 @@ div#moveDown {
 	width: 768px;
 	margin: 10px auto;
 	line-height: 0px;
+  display: flex;
+  flex-direction: row;
 }
 
 img {
@@ -145,11 +149,25 @@ img {
 }
 
 .character {
-	display:inline-block;
+	display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 	height: 64px;
 	width: 64px;
 	background-position: center;
 	background-size: cover;
+  border: 1px solid black;
+}
+
+.character > span {
+  background: rgba(0,0,0,0.5);
+  color: white;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #overlay {
@@ -246,40 +264,4 @@ button:active {
 
 @media handheld {
 	body{width: 800px;}
-}
-
-.character::after {
-  background-color: #333;
-  border-radius: 10px;
-  color: white;
-  content: attr(playername);
-  display: none;
-  padding: 10px 15px;
-  position: absolute;
-  text-align: center;
-  z-index: 999;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, calc(-100% - 10px));
-}
-
-.character::before {
-  background-color: #333;
-  content: ' ';
-  display: none;
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  z-index: 999;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, calc(-100% - 5px)) rotate(45deg);
-}
-
-.character:hover::before {
-	display: block;
-}
-
-.character:hover::after {
-  display: block;
 }

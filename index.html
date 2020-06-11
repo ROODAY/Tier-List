@@ -114,7 +114,7 @@
 		
 		// character images
 		var singleChar = "<div class='character'></div>";
-		var groupHappyDiwali = ["DappyHiwali", "ROODAY"]
+		var groupHappyDiwali = ["DappyHiwali", "Andrew", "Arul", "Edward", "Ishaan", "Kevin", "Logan", "Mike", "Oliver", "Rudy", "Sahil", "Sheel", "Sonj", "Tony"]
 		
 		var singleTier = "<tr><td class='labelHolder' contenteditable='true' style='background-color:#FFFF7F'><span class='label'>NEW</span></td><td><div class='tier sort' id='rows'><div class='hiddenkid'></div></div></td><td><div id='settings'></div><div id='moveButtons'><div id='moveUp'></div><div id='moveDown'></div></div></td></tr>";
 		
@@ -299,7 +299,7 @@
 				$("#char div:last-child").after(singleChar);
 				$("#char div:last-child").css("background-image","url(img/"+currentGame+"/"+game[i]+".png)");
 				$("#char div:last-child").attr("id",i);
-				$("#char div:last-child").attr("playername",game[i]);
+				$("#char div:last-child").append(`<span>${game[i]}<span>`);
 			}
 			$("h1 span").text(currentGame);
 			updateTiers();
@@ -356,7 +356,7 @@
 					$("tr:last-of-type").find(".tier div:last-child").after(singleChar);
 					$("tr:last-of-type").find(".tier div:last-child").css("background-image","url(img/"+processedCode[0]+"/"+currentGameChars[processedCode[i][c]]+".png)");
 					$("tr:last-of-type").find(".tier div:last-child").attr("id",processedCode[i][c]);
-					$("tr:last-of-type").find(".tier div:last-child").attr("playername",currentGameChars[processedCode[i][c]]);
+					$("tr:last-of-type").find(".tier div:last-child").append(`<span>${currentGameChars[processedCode[i][c]]}<span>`);
 					$("#char #"+processedCode[i][c]).remove();
 				}
 			}
