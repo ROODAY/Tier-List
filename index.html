@@ -79,6 +79,7 @@
 				<span id="close"></span>
 				<div id="switchButtons">
 					<button id="switchDappyHiwali">Dappy Hiwali</button>
+					<button id="switchBarryBoys">Barry Boys</button>
 				</div>
 				<p><strong>Changing your group will empty your tierlist!</strong> Do not click unless you are sure you want to change! You cannot undo this.</p>
 			</div>
@@ -95,8 +96,7 @@
 			</div>
 			<div id="screenshotShow">
 				<span id="close"></span>
-				<p>Your image should appear above. You can copy or save this image. Try uploading it to an image hosting website such as <a href="http://imgur.com">Imgur</a>. Alternatively, copy the code below to share an editable version of your tierlist. Just paste a code into the box below and click "Run code" to access it.</p>
-			<textarea id="exportcode" cols="30" rows="8"></textarea><div><button id="runCode">Run code</button></div>
+				<p>Your image should appear above. You can copy or save this image. Try uploading it to an image hosting website such as <a href="http://imgur.com">Imgur</a>. Alternatively, copy the URL to share an editable version of your tierlist.</p>
 			</div>
 		</div>
 	</div>
@@ -104,17 +104,34 @@
 	<script src="dragula.min.js"></script>
 	<script src="html2canvas.js"></script>
 	<script>
+		function updateURLCode() {
+			var url = new URL(document.location);
+			var codeParam = encodeURIComponent(toCode());
+			url.searchParams.set('code', codeParam);
+			window.history.pushState(null, null, url.href)
+		}
+
+		function loadURLCode() {
+			var url = new URL(document.location);
+			if (url.searchParams.has('code')) {
+				var code = decodeURIComponent(url.searchParams.get('code'));
+				loadCode(code);
+			}
+		}
+
 		dragula({
 			isContainer: function (el) {
 				return el.classList.contains('sort');
 			}
 		}).on("drop", function() {
 			localStorage.setItem("TierListMakerCode",toCode());
+			updateURLCode();
 		});
 		
 		// character images
 		var singleChar = "<div class='character'></div>";
 		var groupHappyDiwali = ["DappyHiwali", "Andrew", "Arul", "Edward", "Ishaan", "Kevin", "Logan", "Mike", "Oliver", "Rudy", "Sahil", "Sheel", "Sonj", "Tony"]
+		var groupBarryBoys = ['BarryBoys', 'April', 'Chis', 'Ditsky', 'Jeff', 'Joe', 'Junior', 'Kumez', 'Neil', 'Noah', 'Oliver', 'Phil', 'Rachel', "Rudy"]
 		
 		var singleTier = "<tr><td class='labelHolder' contenteditable='true' style='background-color:#FFFF7F'><span class='label'>NEW</span></td><td><div class='tier sort' id='rows'><div class='hiddenkid'></div></div></td><td><div id='settings'></div><div id='moveButtons'><div id='moveUp'></div><div id='moveDown'></div></div></td></tr>";
 		
@@ -186,6 +203,7 @@
 		$(document).on("click", "#gameChange button", function() { // change game
 			switch($(this).attr("id")) {
 				case "switchDappyHiwali": changeGame(groupHappyDiwali);break;
+				case "switchBarryBoys": changeGame(groupBarryBoys);break;
 			}
 		});
 			
@@ -199,7 +217,6 @@
 				$("#helpMenu").css("display", "none");
 				$("#screenshotShow").css("display", "none");
 			} else if(clicked == "screenshot") { // take a screenshot
-				$("#exportcode").val(toCode());
 				$("#modal").css("display", "none");
 				$("#gameChange").css("display", "none");
 				$("#helpMenu").css("display", "none");
@@ -252,11 +269,10 @@
 				currentTier = $(e.target).closest("tr");
 				if (currentTier.next("tr").length != 0)
 					currentTier.insertAfter(currentTier.next("tr"));
-			} else if (clicked == "runCode") {
-				loadCode($("#exportcode").val());
 			} else if (clicked == "reset") {
 				switch(currentGameChars[0]) {
 					case "DappyHiwali": changeGame(groupHappyDiwali);break;
+					case "BarryBoys": changeGame(groupBarryBoys);break;
 				}
 				loadCode(currentGameChars[0]+"==S|0==A|1==B|3==C|5==D|7==E|8==F|9");
 			}
@@ -347,6 +363,7 @@
 			});
 			switch(processedCode[0][0]) {
 				case "DappyHiwali": changeGame(groupHappyDiwali);break;
+				case "BarryBoys": changeGame(groupBarryBoys);break;
 			}
 			for (var i = 1; i < processedCode.length; i++) {
 				$("tbody").append(singleTier);
@@ -378,11 +395,11 @@
 			if (localStorage.getItem("TierListMakerCode") === null)
 				changeGame(groupHappyDiwali);
 			else {
-				$("#exportcode").val(localStorage.getItem("TierListMakerCode"));
 				loadCode(localStorage.getItem("TierListMakerCode"));
 			}
 			updateTiers();
 			tierlistSize();
+			loadURLCode();
 		});
 		$(window).resize( function () {
 			tierlistSize();
