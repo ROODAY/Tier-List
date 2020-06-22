@@ -108,7 +108,7 @@
 			var url = new URL(document.location);
 			var codeParam = encodeURIComponent(toCode());
 			url.searchParams.set('code', codeParam);
-			window.history.pushState(null, null, url.href)
+			window.history.pushState(null, null, url.href);
 		}
 
 		function loadURLCode() {
@@ -117,6 +117,11 @@
 				var code = decodeURIComponent(url.searchParams.get('code'));
 				loadCode(code);
 			}
+		}
+
+		function resetURL() {
+			var url = new URL(document.location);
+			window.history.pushState(null, null, `${url.origin}${url.pathname}`);
 		}
 
 		dragula({
@@ -205,17 +210,22 @@
 				case "switchDappyHiwali": changeGame(groupHappyDiwali);break;
 				case "switchBarryBoys": changeGame(groupBarryBoys);break;
 			}
+			closeModals();
 		});
-			
+		
+		function closeModals() {
+			$("#overlay").css("opacity", 0);
+			$("#overlay").css("visibility", "hidden");
+			$("#modal").css("display", "none");
+			$("#gameChange").css("display", "none");
+			$("#helpMenu").css("display", "none");
+			$("#screenshotShow").css("display", "none");
+		}
+
 		$(document).on("click", function(e) {
 			clicked = e.target.id;
 			if(clicked == "overlay" || clicked == "modalWrapper" || clicked == "close") { // close modals
-				$("#overlay").css("opacity", 0);
-				$("#overlay").css("visibility", "hidden");
-				$("#modal").css("display", "none");
-				$("#gameChange").css("display", "none");
-				$("#helpMenu").css("display", "none");
-				$("#screenshotShow").css("display", "none");
+				closeModals();
 			} else if(clicked == "screenshot") { // take a screenshot
 				$("#modal").css("display", "none");
 				$("#gameChange").css("display", "none");
@@ -270,11 +280,13 @@
 				if (currentTier.next("tr").length != 0)
 					currentTier.insertAfter(currentTier.next("tr"));
 			} else if (clicked == "reset") {
-				switch(currentGameChars[0]) {
+				switch(currentGame) {
 					case "DappyHiwali": changeGame(groupHappyDiwali);break;
 					case "BarryBoys": changeGame(groupBarryBoys);break;
 				}
-				loadCode(currentGameChars[0]+"==S|0==A|1==B|3==C|5==D|7==E|8==F|9");
+				loadCode(currentGame+"==S|0==A|1==B|3==C|5==D|7==E|8==F|9");
+				localStorage.removeItem("TierListMakerCode");
+				resetURL();
 			}
 		});
 		
@@ -305,6 +317,7 @@
 		}
 		
 		function changeGame(game) {
+			localStorage.setItem("TierListMakerGroup", JSON.stringify(game));
 			currentGameChars = [];
 			currentGameChars = game;
 			currentGame = game[0];
@@ -392,12 +405,13 @@
 		
 		$(document).ready( function() {
 			$("#char").html("<div></div>");
-			if (localStorage.getItem("TierListMakerCode") === null)
-				changeGame(groupHappyDiwali);
-			else {
+			if (localStorage.getItem("TierListMakerCode") !== null) {
 				loadCode(localStorage.getItem("TierListMakerCode"));
 				updateURLCode();
-			}
+			} else if (localStorage.getItem("TierListMakerGroup") !== null)
+					changeGame(JSON.parse(localStorage.getItem("TierListMakerGroup")));
+			else 
+				changeGame(groupHappyDiwali);
 			updateTiers();
 			tierlistSize();
 			loadURLCode();
