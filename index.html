@@ -136,7 +136,7 @@
 		// character images
 		var singleChar = "<div class='character'></div>";
 		var groupHappyDiwali = ["DappyHiwali", "Andrew", "Arul", "Edward", "Ishaan", "Kevin", "Logan", "Mike", "Oliver", "Rudy", "Sahil", "Sheel", "Sonj", "Tony"];
-		var groupBarryBoys = ['BarryBoys', 'April', 'Chis', 'Cruz', 'Ditsky', 'Faheem', 'Gavin', 'Geoff', 'Jeff', 'Joe', 'Junior', 'Kumez', 'Neil', 'Noah', 'Oliver', 'Pete', 'Phil', 'Rachel', 'Rudy', 'Serge', 'Zach'];
+		var groupBarryBoys = ['BarryBoys', 'April', 'Chis', 'Cruz', 'Ditsky', 'Faheem', 'Gavin', 'Geoff', 'Jeff', 'Joe', 'Junior', 'Kumez', 'Neil', 'Noah', 'Oliver', 'Pete', 'Phil', 'Rachel', 'Rudy', 'Serge', 'Tony', 'Zach'];
 		
 		var singleTier = "<tr><td class='labelHolder' contenteditable='true' style='background-color:#FFFF7F'><span class='label'>NEW</span></td><td><div class='tier sort' id='rows'><div class='hiddenkid'></div></div></td><td><div id='settings'></div><div id='moveButtons'><div id='moveUp'></div><div id='moveDown'></div></div></td></tr>";
 		
@@ -211,6 +211,7 @@
 				case "switchBarryBoys": changeGame(groupBarryBoys);break;
 			}
 			closeModals();
+			resetURL();
 		});
 		
 		function closeModals() {
@@ -224,7 +225,7 @@
 
 		$(document).on("click", function(e) {
 			clicked = e.target.id;
-			if(clicked == "overlay" || clicked == "modalWrapper" || clicked == "close") { // close modals
+      if(clicked == "overlay" || clicked == "modalWrapper" || clicked == "close") { // close modals
 				closeModals();
 			} else if(clicked == "screenshot") { // take a screenshot
 				$("#modal").css("display", "none");
@@ -284,7 +285,7 @@
 					case "DappyHiwali": changeGame(groupHappyDiwali);break;
 					case "BarryBoys": changeGame(groupBarryBoys);break;
 				}
-				loadCode(currentGame+"==S|0==A|1==B|3==C|5==D|7==E|8==F|9");
+        loadCode(currentGame+"_S-0_A-1_B-3_C-5_D-7_E-8_F-9");
 				localStorage.removeItem("TierListMakerCode");
 				resetURL();
 			}
@@ -334,7 +335,7 @@
 			updateTiers();
 		}
 		
-		function toCode() { // format game==label|color|char1|char2|...==label|color|char1|char2|...==...
+		function toCode() { // format game_label-color-char1-char2-..._label-color-char1-char2-..._...
 			var codeColors = [], labels = [], currentChars = [], shareCode = "";
 			characters = [];
 			$("tr").each( function() {
@@ -346,27 +347,27 @@
 				});
 				characters.push(currentChars);
 			});
-			shareCode += currentGame + "==";
+			shareCode += currentGame + "_";
 			for (var i = 0; i < labels.length; i++) {
-				shareCode += labels[i] +"|"+ codeColors[i];
+				shareCode += labels[i] +"-"+ codeColors[i];
 				if (characters[i].length != 0)
-					shareCode += "|";
+					shareCode += "-";
 				for (var c = 0; c < characters[i].length; c++) {
 					shareCode += characters[i][c];
 					if (c != characters[i].length-1)
-						shareCode += "|";
+						shareCode += "-";
 				}
 				if (i != labels.length-1)
-					shareCode += "==";
+					shareCode += "_";
 			}
 			return shareCode;
 		}
 		
 		function loadCode(code) {
 			var codeSplit = [], tempTier = [], processedCode = [];
-			codeSplit = code.split("==");
+			codeSplit = code.split("_");
 			for (var i = 0; i < codeSplit.length; i++) {
-				tempTier = codeSplit[i].split("|");
+				tempTier = codeSplit[i].split("-");
 				for (var c = 1; c < tempTier.length; c++)
 					tempTier[c] = Number(tempTier[c]);
 				processedCode[i] = tempTier;

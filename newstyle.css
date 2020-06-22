@@ -68,8 +68,9 @@ table {
 }
 
 .labelHolder {
-	min-width: 48px;
-	height: 64px;
+	max-width: 64px;
+	min-height: 64px;
+	word-break: break-all;
 	transition: background .3s;
 }
 
